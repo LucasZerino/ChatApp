@@ -1,9 +1,20 @@
-##Padrão de entrada
+## Comando para iniciar o projeto
 
-SRC
- | -- Controllers -> Entrada e validação de dados
- | -- Models -> Definição dos dados
- | -- Routes -> Definição das rotas
- | -- Database -> Definição da conexão com o banco de dados
--- .env -> Definição das variáveis de ambiente
--- Dockerfile -> Definição do container
+```bash
+go run main.go -migrate
+go run main.go -seed
+```
+
+    
+## Comando para Migrar as tabelas do banco de dados
+
+```bash
+go run main.go -migrate
+```
+
+
+## Comando para Semear os dados do banco de dados ( Utilizar em desenvolvimento )
+
+```bash
+go run main.go -seed
+```
