@@ -45,7 +45,7 @@ func LoginSuperAdmin(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		// Verifica se a senha está correta
-		if user.EncryptedPassword != credentials.Password { // Aqui você deve usar a função de comparação de hash se a senha estiver criptografada
+		if user.EncryptedPassword != credentials.Password {
 			c.JSON(http.StatusUnauthorized, rest_error.NewUnauthorizedError("Senha não condiz com o email informado"))
 			return
 		}
@@ -56,6 +56,26 @@ func LoginSuperAdmin(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"message": "Login bem-sucedido!", "user": user})
+		// Busca as contas associadas ao usuário
+		var accountUsers []models.AccountUser
+		if err := db.Where("user_id = ?", user.ID).Find(&accountUsers).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, rest_error.NewInternalServerError("Erro ao buscar contas associadas"))
+			return
+		}
+
+		// Cria uma lista de contas
+		var accounts []models.Account
+		for _, accountUser := range accountUsers {
+			var account models.Account
+			if err := db.First(&account, accountUser.AccountID).Error; err == nil {
+				accounts = append(accounts, account)
+			}
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Login bem-sucedido!",
+			"user":    user,
+			"accounts": accounts, // Inclui as contas associadas na resposta
+		})
 	}
 }
