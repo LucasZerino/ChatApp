@@ -16,7 +16,7 @@ type IntegrationHook struct {
 	AccessToken string         `gorm:"column:access_token" json:"access_token"`
 	CreatedAt   time.Time      `gorm:"column:created_at;not null" json:"created_at"`
 	UpdatedAt   time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
-	Settings    *map[string]interface{} `gorm:"column:settings;type:jsonb;default:'{}'" json:"settings"`
+	Settings    *JSONB `gorm:"column:settings;type:jsonb;default:'{}'" json:"settings"`
 }
 
 // TableName define o nome da tabela para o GORM

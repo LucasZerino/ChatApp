@@ -10,7 +10,7 @@ import (
 type ChannelSMS struct {
 	ID              uint      `gorm:"primaryKey;autoIncrement" json:"id"`
 	AccountID       uint      `gorm:"column:account_id;not null" json:"account_id"`
-	PhoneNumber     string    `gorm:"column:phone_number;not null;uniqueIndex:idx_phone_number" json:"phone_number"`
+	PhoneNumber     string    `gorm:"column:phone_number;not null;uniqueIndex:idx_channel_sms_phone_number" json:"phone_number"` // Renomeado
 	Provider        string    `gorm:"column:provider;default:'default'" json:"provider"`
 	ProviderConfig  string    `gorm:"column:provider_config;type:jsonb;default:'{}'" json:"provider_config"`
 	CreatedAt       time.Time `gorm:"column:created_at;not null" json:"created_at"`
@@ -25,5 +25,5 @@ func (ChannelSMS) TableName() string {
 // CreateIndexes cria os índices para a tabela ChannelSMS
 func (ChannelSMS) CreateIndexes(db *gorm.DB) {
 	// Criar índice único para o campo phone_number
-	db.Migrator().CreateIndex(&ChannelSMS{}, "index_channel_sms_on_phone_number")
+	db.Migrator().CreateIndex(&ChannelSMS{}, "idx_channel_sms_phone_number") // Renomeado
 }

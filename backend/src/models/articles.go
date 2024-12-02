@@ -22,7 +22,7 @@ type Article struct {
 	UpdatedAt         time.Time `gorm:"column:updated_at;not null" json:"updated_at"`
 	AuthorID          *uint     `gorm:"column:author_id" json:"author_id"`
 	AssociatedArticleID *uint   `gorm:"column:associated_article_id" json:"associated_article_id"`
-	Meta              map[string]interface{} `gorm:"column:meta;default:'{}'" json:"meta"`
+	Meta              JSONB `gorm:"column:meta;default:'{}'" json:"meta"`
 	Slug              string    `gorm:"column:slug;not null" json:"slug"`
 	Position          *int      `gorm:"column:position" json:"position"`
 }

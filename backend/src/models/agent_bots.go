@@ -12,7 +12,7 @@ type AgentBot struct {
 	OutgoingURL string                 `gorm:"column:outgoing_url" json:"outgoing_url"`             // URL de saída do bot
 	AccountID   *uint                  `gorm:"column:account_id" json:"account_id"`                 // ID da conta associada (opcional)
 	BotType     int                    `gorm:"column:bot_type;default:0" json:"bot_type"`           // Tipo do bot com valor padrão 0
-	BotConfig   map[string]interface{} `gorm:"column:bot_config;type:jsonb;default:'{}'" json:"bot_config"` // Configuração do bot em JSONB (valor padrão vazio)
+	BotConfig   JSONB `gorm:"column:bot_config;type:jsonb;default:'{}'" json:"bot_config"` // Configuração do bot em JSONB (valor padrão vazio)
 	CreatedAt   time.Time              `gorm:"column:created_at;not null" json:"created_at"`        // Timestamp de criação obrigatório
 	UpdatedAt   time.Time              `gorm:"column:updated_at;not null" json:"updated_at"`        // Timestamp de atualização obrigatório
 }

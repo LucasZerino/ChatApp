@@ -30,7 +30,7 @@ type ChannelEmail struct {
 	SMTPAuthentication     string                 `gorm:"column:smtp_authentication;default:'login'" json:"smtp_authentication"`
 	SMTPOpenSSLVerifyMode  string                 `gorm:"column:smtp_openssl_verify_mode;default:'none'" json:"smtp_openssl_verify_mode"`
 	SMTPEnableSSLTLS       bool                   `gorm:"column:smtp_enable_ssl_tls;default:false" json:"smtp_enable_ssl_tls"`
-	ProviderConfig         map[string]interface{} `gorm:"column:provider_config;default:'{}'" json:"provider_config"`
+	ProviderConfig         JSONB `gorm:"column:provider_config;default:'{}'" json:"provider_config"`
 	Provider              string                 `gorm:"column:provider" json:"provider"`
 }
 

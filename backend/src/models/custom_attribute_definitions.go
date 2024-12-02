@@ -12,15 +12,15 @@ type CustomAttributeDefinition struct {
 	AttributeDisplayName  string         `gorm:"column:attribute_display_name" json:"attribute_display_name"`
 	AttributeKey          string         `gorm:"column:attribute_key" json:"attribute_key"`
 	AttributeDisplayType  int            `gorm:"column:attribute_display_type;default:0" json:"attribute_display_type"`
-	DefaultValue          *int           `gorm:"column:default_value" json:"default_value"`
+	DefaultValue          int            `gorm:"column:default_value" json:"default_value"`
 	AttributeModel        int            `gorm:"column:attribute_model;default:0" json:"attribute_model"`
 	AccountID             uint           `gorm:"column:account_id" json:"account_id"`
 	CreatedAt             time.Time      `gorm:"column:created_at;not null" json:"created_at"`
 	UpdatedAt             time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
-	AttributeDescription  *string        `gorm:"column:attribute_description" json:"attribute_description"`
-	AttributeValues       []byte         `gorm:"column:attribute_values;type:jsonb;default:[]"`
-	RegexPattern          *string        `gorm:"column:regex_pattern" json:"regex_pattern"`
-	RegexCue              *string        `gorm:"column:regex_cue" json:"regex_cue"`
+	AttributeDescription  string         `gorm:"column:attribute_description" json:"attribute_description"`
+	AttributeValues       string         `gorm:"column:attribute_values;type:jsonb;default:'[]'" json:"attribute_values"`
+	RegexPattern          string         `gorm:"column:regex_pattern" json:"regex_pattern"`
+	RegexCue              string         `gorm:"column:regex_cue" json:"regex_cue"`
 }
 
 // TableName define o nome da tabela para o GORM

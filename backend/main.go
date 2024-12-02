@@ -34,10 +34,92 @@ func startServer(db *gorm.DB) {
 	}
 }
 
+// Função para limpar o banco de dados
+func clearDatabase(db *gorm.DB) {
+	// Obter todas as tabelas
+	tables := []string{
+		"users",
+		"accounts",
+		"access_tokens",
+		"action_mailbox_inbound_emails",
+		"active_storage_attachments",
+		"active_storage_blobs",
+		"active_storage_variant_records",
+		"agent_bots_inbox",
+		"agent_bots",
+		"applied_slas",
+		"articles",
+		"attachments",
+		"audits",
+		"automation_rules",
+		"campaigns",
+		"canned_responses",
+		"categories",
+		"channel_api",
+		"channel_email",
+		"channel_facebook_pages",
+		"channel_line",
+		"channel_sms",
+		"channel_telegram",
+		"channel_twilio_sms",
+		"channel_twitter_profiles",
+		"channel_web_widgets",
+		"channel_whatsapp",
+		"contact_inbox",
+		"contacts",
+		"conversation_participants",
+		"conversations",
+		"csat_survey_responses",
+		"custom_attribute_definitions",
+		"custom_filters",
+		"custom_roles",
+		"data_imports",
+		"email_templates",
+		"folders",
+		"inbox_members",
+		"inboxes",
+		"installation_configs",
+		"integration_hooks",
+		"labels",
+		"macros",
+		"mentions",
+		"messages",
+		"notes",
+		"notification_settings",
+		"notification_subscriptions",
+		"notifications",
+		"platform_app_permissibles",
+		"platform_apps",
+		"portal_members",
+		"portals_members",
+		"portals",
+		"related_categories",
+		"reporting_events",
+		"sla_events",
+		"sla_policies",
+		"taggings",
+		"tags",
+		"team_members",
+		"teams",
+		"telegram_bots",
+		"webhooks",
+		"working_hours",
+	}
+
+	for _, table := range tables {
+		if err := db.Migrator().DropTable(table); err != nil {
+			log.Printf("Erro ao limpar a tabela %s: %v", table, err)
+		} else {
+			log.Printf("Tabela %s removida com sucesso.", table)
+		}
+	}
+}
+
 func main() {
 	// Definindo comandos
 	migrate := flag.Bool("migrate", false, "Executa migrações")
 	seed := flag.Bool("seed", false, "Executa seeders")
+	clear := flag.Bool("clear", false, "Limpa o banco de dados")
 	start := flag.Bool("start", false, "Inicia o servidor")
 
 	flag.Parse()
@@ -57,6 +139,11 @@ func main() {
 		log.Println("Executando seed...")
 		seeders.SeedDatabase(db) // Chama a função SeedDatabase do pacote seeders
 		log.Println("Dados semeados com sucesso!")
+	}
+
+	if *clear {
+		log.Println("Limpando o banco de dados...")
+		clearDatabase(db) // Chama a função de limpeza
 	}
 
 	if *start {

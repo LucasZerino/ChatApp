@@ -22,14 +22,14 @@ type Inbox struct {
 	Timezone                  string    `gorm:"column:timezone;default:'UTC'" json:"timezone"`
 	EnableEmailCollect        bool      `gorm:"column:enable_email_collect;default:true" json:"enable_email_collect"`
 	CsatSurveyEnabled         bool      `gorm:"column:csat_survey_enabled;default:false" json:"csat_survey_enabled"`
-	AllowMessagesAfterResolved bool     `gorm:"column:allow_messages_after_resolved;default:true" json:"allow_messages_after_resolved"`
-	AutoAssignmentConfig      string    `gorm:"column:auto_assignment_config;type:jsonb" json:"auto_assignment_config"`
-	LockToSingleConversation bool      `gorm:"column:lock_to_single_conversation;default:false;not null" json:"lock_to_single_conversation"`
+	AllowMessagesAfterResolved bool      `gorm:"column:allow_messages_after_resolved;default:true" json:"allow_messages_after_resolved"`
+	AutoAssignmentConfig      JSONB     `gorm:"column:auto_assignment_config;type:jsonb;default:'{}'" json:"auto_assignment_config"`
+	LockToSingleConversation  bool      `gorm:"column:lock_to_single_conversation;default:false;not null" json:"lock_to_single_conversation"`
 	PortalID                  uint      `gorm:"column:portal_id" json:"portal_id"`
 	SenderNameType            int       `gorm:"column:sender_name_type;default:0;not null" json:"sender_name_type"`
 	BusinessName              string    `gorm:"column:business_name" json:"business_name"`
 	CsatResponseVisible       bool      `gorm:"column:csat_response_visible;default:false;not null" json:"csat_response_visible"`
-	AllowAgentToDeleteMessage bool     `gorm:"column:allow_agent_to_delete_message;default:true;not null" json:"allow_agent_to_delete_message"`
+	AllowAgentToDeleteMessage bool      `gorm:"column:allow_agent_to_delete_message;default:true;not null" json:"allow_agent_to_delete_message"`
 }
 
 // TableName define o nome da tabela para o GORM

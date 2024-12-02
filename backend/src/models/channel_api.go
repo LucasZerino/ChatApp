@@ -16,7 +16,7 @@ type ChannelAPI struct {
 	Identifier           string                 `gorm:"column:identifier;uniqueIndex" json:"identifier"`
 	HMACToken            string                 `gorm:"column:hmac_token;uniqueIndex" json:"hmac_token"`
 	HMACMandatory        bool                   `gorm:"column:hmac_mandatory;default:false" json:"hmac_mandatory"`
-	AdditionalAttributes map[string]interface{} `gorm:"column:additional_attributes;default:'{}'" json:"additional_attributes"`
+	AdditionalAttributes JSONB `gorm:"column:additional_attributes;default:'{}'" json:"additional_attributes"`
 }
 
 // TableName define o nome da tabela para o GORM
