@@ -1,13 +1,29 @@
 package controllers
 
 import (
-	rest_error "api/src/configs" // ajuste o caminho conforme necessário
-	"api/src/models"             // ajuste o caminho conforme necessário
 	"net/http"
+	"time"
 
+	"github.com/golang-jwt/jwt"
+	"golang.org/x/crypto/bcrypt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"api/src/models"
+	rest_error "api/src/configs" // ajuste o caminho conforme necessário
 )
+
+var jwtSecret = []byte("your_secret_key") // Substitua pela sua chave secreta
+
+// Função para gerar o token JWT
+func generateToken(user models.Users) (string, error) {
+	claims := jwt.MapClaims{
+		"uid":  user.Email,
+		"exp":  time.Now().Add(time.Hour * 24).Unix(), // Expira em 24 horas
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(jwtSecret)
+}
 
 // Função para login de Superadmin
 func LoginSuperAdmin(db *gorm.DB) gin.HandlerFunc {
@@ -44,8 +60,8 @@ func LoginSuperAdmin(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		// Verifica se a senha está correta
-		if user.EncryptedPassword != credentials.Password {
+		// Verifica se a senha está correta usando bcrypt
+		if err := bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(credentials.Password)); err != nil {
 			c.JSON(http.StatusUnauthorized, rest_error.NewUnauthorizedError("Senha não condiz com o email informado"))
 			return
 		}
@@ -56,26 +72,19 @@ func LoginSuperAdmin(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		// Busca as contas associadas ao usuário
-		var accountUsers []models.AccountUser
-		if err := db.Where("user_id = ?", user.ID).Find(&accountUsers).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, rest_error.NewInternalServerError("Erro ao buscar contas associadas"))
+		// Gera o token JWT
+		token, err := generateToken(user)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, rest_error.NewInternalServerError("Erro ao gerar token"))
 			return
 		}
 
-		// Cria uma lista de contas
-		var accounts []models.Account
-		for _, accountUser := range accountUsers {
-			var account models.Account
-			if err := db.First(&account, accountUser.AccountID).Error; err == nil {
-				accounts = append(accounts, account)
-			}
-		}
-
 		c.JSON(http.StatusOK, gin.H{
-			"message": "Login bem-sucedido!",
-			"user":    user,
-			"accounts": accounts, // Inclui as contas associadas na resposta
+			"access-token": token,
+			"token-type":  "Bearer",
+			"client":      "ceJ7Fm6HfFsLrL4WonF6rw", // Substitua conforme necessário
+			"expiry":      time.Now().Add(time.Hour * 24).Unix(), // Expiração do token
+			"uid":         user.Email,
 		})
 	}
 }

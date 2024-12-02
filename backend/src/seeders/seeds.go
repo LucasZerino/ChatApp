@@ -3,6 +3,7 @@ package seeders
 import (
 	"log"
 	"strconv"
+	"golang.org/x/crypto/bcrypt"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -30,13 +31,13 @@ func SeedDatabase(db *gorm.DB) {
 	log.Println("Iniciando o seeding do banco de dados...")
 
 	// Criação de contas
-	account := models.Account{Name: "Acme Inc"}
+	account := models.Account{Name: "Bolt 360"}
 	if err := db.Create(&account).Error; err != nil {
 		log.Fatalf("Erro ao criar conta: %v", err)
 	}
 	log.Println("Conta criada:", account)
 
-	secondaryAccount := models.Account{Name: "Acme Org"}
+	secondaryAccount := models.Account{Name: "Bolt 360 - Development"}
 	if err := db.Create(&secondaryAccount).Error; err != nil {
 		log.Fatalf("Erro ao criar conta secundária: %v", err)
 	}
@@ -46,7 +47,7 @@ func SeedDatabase(db *gorm.DB) {
 	user := models.Users{
 		Name:              "Beto",
 		Email:             ptr("beto@bolt360.com.br"),
-		EncryptedPassword: "Password1!",
+		EncryptedPassword: hashPassword("Password1!"),
 		Type:              ptr("SuperAdmin"),
 	}
 	if err := db.Create(&user).Error; err != nil {
@@ -153,6 +154,15 @@ func SeedDatabase(db *gorm.DB) {
 	}).Error; err != nil {
 		log.Fatalf("Erro ao criar CannedResponse: %v", err)
 	}
+}
+
+// Função para hash da senha
+func hashPassword(password string) string {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		log.Fatalf("Erro ao criptografar a senha: %v", err)
+	}
+	return string(bytes)
 }
 
 func main() {

@@ -34,6 +34,14 @@ func startServer(db *gorm.DB) {
 	}
 }
 
+func deleteDatabase(db *gorm.DB) {
+	// Aqui você pode usar um comando SQL para deletar o banco de dados
+	if err := db.Exec("DROP SCHEMA public CASCADE; CREATE SCHEMA public;").Error; err != nil {
+		log.Fatalf("Erro ao deletar o banco de dados: %v", err)
+	}
+	log.Println("Banco de dados deletado com sucesso!")
+}
+
 // Função para limpar o banco de dados
 func clearDatabase(db *gorm.DB) {
 	// Obter todas as tabelas
@@ -121,6 +129,7 @@ func main() {
 	seed := flag.Bool("seed", false, "Executa seeders")
 	clear := flag.Bool("clear", false, "Limpa o banco de dados")
 	start := flag.Bool("start", false, "Inicia o servidor")
+	delete := flag.Bool("delete", false, "Deleta o banco de dados") // Adicionando o flag para deletar o banco de dados
 
 	flag.Parse()
 
@@ -128,6 +137,11 @@ func main() {
 	db, err := connectDatabase()
 	if err != nil {
 		log.Fatalf("Erro ao conectar ao banco de dados: %v", err)
+	}
+
+	if *delete {
+		deleteDatabase(db) // Chama a função para deletar o banco de dados
+		return
 	}
 
 	if *migrate {
